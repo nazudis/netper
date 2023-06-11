@@ -14,7 +14,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gorilla/mux"
 	"github.com/nazudis/utils"
 )
 
@@ -32,7 +31,7 @@ type Request struct {
 func PlugRequest(r *http.Request, w http.ResponseWriter) *Request {
 	req := &Request{
 		r:          *r,
-		segments:   mux.Vars(r),
+		segments:   vars(r),
 		params:     Params{},
 		files:      map[string]interface{}{},
 		header:     r.Header,
@@ -98,7 +97,7 @@ func PlugRequest(r *http.Request, w http.ResponseWriter) *Request {
 func TouchRequest(r *http.Request, w http.ResponseWriter) *Request {
 	req := &Request{
 		r:          *r,
-		segments:   mux.Vars(r),
+		segments:   vars(r),
 		params:     Params{},
 		files:      map[string]interface{}{},
 		header:     r.Header,
@@ -201,6 +200,17 @@ func scanFiles(values []*multipart.FileHeader) interface{} {
 	} else {
 		return nil
 	}
+}
+
+type contextKey int
+
+const varsKey contextKey = iota
+
+func vars(r *http.Request) map[string]string {
+	if rv := r.Context().Value(varsKey); rv != nil {
+		return rv.(map[string]string)
+	}
+	return nil
 }
 
 func (r *Request) GetHost() string {
