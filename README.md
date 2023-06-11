@@ -1,19 +1,22 @@
-# JUMPER
-[![Github go.mod](https://img.shields.io/github/go-mod/go-version/verzth/jumper?style=for-the-badge)](https://golang.org)
-[![Github Release](https://img.shields.io/github/v/release/verzth/jumper?style=for-the-badge)](https://github.com/verzth/jumper)
-[![Github Pre-Release](https://img.shields.io/github/v/tag/verzth/jumper?include_prereleases&sort=semver&style=for-the-badge)](https://github.com/verzth/jumper)
+# NETPER
+[![Github go.mod](https://img.shields.io/github/go-mod/go-version/nazudis/netper?style=for-the-badge)](https://golang.org)
+[![Github Release](https://img.shields.io/github/v/release/nazudis/netper?style=for-the-badge)](https://github.com/nazudis/netper)
+[![Github Pre-Release](https://img.shields.io/github/v/tag/nazudis/netper?include_prereleases&sort=semver&style=for-the-badge)](https://github.com/nazudis/netper)
 
-Jumper is Go Module to help Developer handling HTTP Request & Response.
+Netper is Go Module to help Developer handling HTTP Request & Response.
 
 ```bash
-go get git.verzth.work/go/jumper/v2
+go get github.com/nazudis/netper
 ```
+
+#### Disclaimer
+This is a copy of the original code <https://git.verzth.work/go/jumper>.
 
 ##### Usage
 ###### Request Parser
 ```go
 func SomeHandler(w http.ResponseWriter, r *http.Request) {
-    var req = jumper.PlugRequest(r, w) // Request Parser
+    var req = netper.PlugRequest(r, w) // Request Parser
 
     if req.HasHeader("X-Custom") {
         // Check whether 'X-Custom' header exist without check the value
@@ -57,9 +60,9 @@ func SomeHandler(w http.ResponseWriter, r *http.Request) {
     ids := req.GetArrayUniquify("ids") // Get ids value as Array of interface{} and uniquify if possible
     obj := req.GetMap("object") // Get object value as Map of map[string]interface{}
     obj := req.GetStruct("object") // Get object value as struct of interface{}
-    json := req.GetJSON("jsonstring") // Get jsonstring value as jumper.JSON
-    file := req.GetFile("file") // Get file value as jumper.File
-    files := req.GetFiles("files") // Get files value as Array of jumper.File
+    json := req.GetJSON("jsonstring") // Get jsonstring value as netper.JSON
+    file := req.GetFile("file") // Get file value as netper.File
+    files := req.GetFiles("files") // Get files value as Array of netper.File
 }
 ```
 
@@ -94,12 +97,12 @@ package mypackage
 
 import (
     // SOME PACKAGES
-	"git.verzth.work/go/jumper/v2"
+	"github.com/nazudis/netper"
     // SOME PACKAGES
 )
 
 func SomeHandler(w http.ResponseWriter, r *http.Request) {
-    var res = jumper.PlugResponse(w) // Response Writer
+    var res = netper.PlugResponse(w) // Response Writer
     var data interface{}
 
     res.SetHttpCode(200) // Set HTTP Response Code. HTTP/1.1 standard (RFC 7231)
@@ -109,9 +112,4 @@ func SomeHandler(w http.ResponseWriter, r *http.Request) {
     res.ReplyFailed("1000001", "ABCDEF", "Error Occurred")
     res.ReplySuccess("F000002", "SSSSSS", "Success", data)
 }
-```
-
-Demo Link
-```
-http://localhost:9999/?list={"obj":{"id":[1,2,3]}}
 ```

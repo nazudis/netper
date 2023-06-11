@@ -1,6 +1,6 @@
-package jumper
+package netper
 
-type Jumper struct {
+type Netper struct {
 	Request
 	Response
 }

@@ -1,14 +1,11 @@
-package jumper
+package netper
 
 import (
 	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"git.verzth.work/go/utils"
-	"github.com/gorilla/mux"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"net/textproto"
@@ -16,6 +13,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gorilla/mux"
+	"github.com/nazudis/utils"
 )
 
 type Request struct {
@@ -152,7 +152,7 @@ func TouchRequest(r *http.Request, w http.ResponseWriter) *Request {
 
 					err := dec.Decode(&req.params)
 
-					r.Body = ioutil.NopCloser(b)
+					r.Body = io.NopCloser(b)
 					if err != nil {
 						w.WriteHeader(http.StatusInternalServerError)
 						return req
@@ -535,7 +535,7 @@ func (r *Request) GetFloat64Ptr(key string) *float64 {
 		case int:
 			v = float64(r.params[key].(int))
 		case string:
-			v, _ = strconv.ParseFloat(r.params[key].(string), 10)
+			v, _ = strconv.ParseFloat(r.params[key].(string), 64)
 		case bool:
 			{
 				if r.params[key].(bool) {
@@ -582,7 +582,7 @@ func (r *Request) GetBoolPtr(key string) *bool {
 		case int:
 			v = float64(r.params[key].(int)) > 0
 		case string:
-			i64, _ := strconv.ParseFloat(r.params[key].(string), 10)
+			i64, _ := strconv.ParseFloat(r.params[key].(string), 64)
 			v = i64 > 0
 		case bool:
 			v = r.params[key].(bool)

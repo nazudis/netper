@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"git.verzth.work/go/jumper/v2"
+	"net/http"
+
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"net/http"
+	"github.com/nazudis/netper"
 )
 
 func main() {
@@ -24,9 +25,9 @@ func main() {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	var req = jumper.TouchRequest(r, w) // Plug Request without clearing io.Reader
-	req = jumper.PlugRequest(r, w)      // Plug Request normally
-	var res = jumper.PlugResponse(w)
+	var req = netper.TouchRequest(r, w) // Plug Request without clearing io.Reader
+	req = netper.PlugRequest(r, w)      // Plug Request normally
+	var res = netper.PlugResponse(w)
 
 	/*vn := req.GetMap("list")["obj"]
 	fmt.Println(vn.(map[string]interface{})["id"].([]interface{})[0])*/
@@ -48,7 +49,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var n1 Names
-	_ = jumper.ParseOf[Names](req, &n1)
+	_ = netper.ParseOf[Names](req, &n1)
 
 	_ = res.ReplySuccess("0000000", "SSSSSS", "Success")
 }

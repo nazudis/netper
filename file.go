@@ -1,16 +1,16 @@
-package jumper
+package netper
 
 import (
 	"errors"
-	"io/ioutil"
+	"io"
 	"mime/multipart"
 	"os"
 	"path/filepath"
 )
 
 type File struct {
-	f multipart.File
-	fh *multipart.FileHeader
+	f    multipart.File
+	fh   *multipart.FileHeader
 	name string
 }
 
@@ -29,13 +29,13 @@ func (f *File) Name() string {
 func (f *File) Store(path string, pattern string, perm os.FileMode) (string, error) {
 	os.MkdirAll(path, perm)
 
-	file, err := ioutil.TempFile(path, pattern)
+	file, err := os.CreateTemp(path, pattern)
 	if err != nil {
 		return "", errors.New("failed to store file")
 	}
 	defer file.Close()
 
-	fBytes, err := ioutil.ReadAll(f.GetFile())
+	fBytes, err := io.ReadAll(f.GetFile())
 	if err != nil {
 		return "", errors.New("failed to read file")
 	}
@@ -50,12 +50,12 @@ func (f *File) Store(path string, pattern string, perm os.FileMode) (string, err
 func (f *File) StoreAs(path string, name string, perm os.FileMode) error {
 	os.MkdirAll(path, perm)
 
-	fBytes, err := ioutil.ReadAll(f.GetFile())
+	fBytes, err := io.ReadAll(f.GetFile())
 	if err != nil {
 		return errors.New("failed to read file")
 	}
 
-	err = ioutil.WriteFile(path+"/"+name, fBytes, perm)
+	err = os.WriteFile(path+"/"+name, fBytes, perm)
 	if err != nil {
 		return errors.New("failed to store file")
 	}

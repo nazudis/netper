@@ -1,4 +1,4 @@
-package jumper
+package netper
 
 import (
 	"net/http"
@@ -16,10 +16,10 @@ func getHost(r *http.Request) string {
 		IPAddress = r.RemoteAddr
 	}
 
-	lIndex := strings.LastIndex(IPAddress,":")
+	lIndex := strings.LastIndex(IPAddress, ":")
 	if lIndex != -1 {
 		return string([]rune(IPAddress)[0:lIndex])
-	}else {
+	} else {
 		return string([]rune(IPAddress)[0:])
 	}
 }
@@ -33,10 +33,10 @@ func getPort(r *http.Request) string {
 		IPAddress = r.RemoteAddr
 	}
 
-	lIndex := strings.LastIndex(IPAddress,":")
+	lIndex := strings.LastIndex(IPAddress, ":")
 	if lIndex != -1 {
 		return string([]rune(IPAddress)[lIndex+1:])
-	}else {
+	} else {
 		return ""
 	}
 }
