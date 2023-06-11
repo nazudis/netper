@@ -19,7 +19,6 @@ import (
 
 type Request struct {
 	r          http.Request
-	segments   map[string]string
 	params     Params
 	files      map[string]interface{}
 	header     http.Header
@@ -31,7 +30,6 @@ type Request struct {
 func PlugRequest(r *http.Request, w http.ResponseWriter) *Request {
 	req := &Request{
 		r:          *r,
-		segments:   vars(r),
 		params:     Params{},
 		files:      map[string]interface{}{},
 		header:     r.Header,
@@ -97,7 +95,6 @@ func PlugRequest(r *http.Request, w http.ResponseWriter) *Request {
 func TouchRequest(r *http.Request, w http.ResponseWriter) *Request {
 	req := &Request{
 		r:          *r,
-		segments:   vars(r),
 		params:     Params{},
 		files:      map[string]interface{}{},
 		header:     r.Header,
@@ -202,17 +199,6 @@ func scanFiles(values []*multipart.FileHeader) interface{} {
 	}
 }
 
-type contextKey int
-
-const varsKey contextKey = iota
-
-func vars(r *http.Request) map[string]string {
-	if rv := r.Context().Value(varsKey); rv != nil {
-		return rv.(map[string]string)
-	}
-	return nil
-}
-
 func (r *Request) GetHost() string {
 	return r.r.URL.Hostname()
 }
@@ -280,42 +266,6 @@ func (r *Request) Header(key string) string {
 
 func (r *Request) Append(key string, val string) {
 	r.params[key] = val
-}
-
-func (r *Request) GetSegment(key string) string {
-	return r.segments[key]
-}
-
-func (r *Request) GetSegmentUint64(key string) uint64 {
-	if r.segments[key] != "" {
-		i64, _ := strconv.ParseUint(r.segments[key], 10, 32)
-		return i64
-	}
-	return 0
-}
-
-func (r *Request) GetSegmentUint32(key string) uint32 {
-	return uint32(r.GetSegmentUint64(key))
-}
-
-func (r *Request) GetSegmentUint(key string) uint {
-	return uint(r.GetSegmentUint64(key))
-}
-
-func (r *Request) GetSegmentInt64(key string) int64 {
-	if r.segments[key] != "" {
-		i64, _ := strconv.ParseInt(r.segments[key], 10, 32)
-		return i64
-	}
-	return 0
-}
-
-func (r *Request) GetSegmentInt32(key string) int32 {
-	return int32(r.GetSegmentInt64(key))
-}
-
-func (r *Request) GetSegmentInt(key string) int {
-	return int(r.GetSegmentInt64(key))
 }
 
 func (r *Request) GetFile(key string) (*File, error) {
